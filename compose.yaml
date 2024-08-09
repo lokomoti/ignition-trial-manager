@@ -1,0 +1,26 @@
+version: "3"
+services:
+  selenium:
+    image: selenium/standalone-chrome:latest
+    restart: unless-stopped
+    ports:
+      - "4444:4444"
+      # - "7900:7900" # Expose port 7900 for VNC
+
+  python:
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./app:/usr/src/app
+    working_dir: /usr/src/app
+    depends_on:
+      - selenium
+    command: ["python", "main.py"]
+    environment:
+      - USERNAME=selenium
+      - PASSWORD=Seleniumselenium123!
+      - RESETINTERVAL=5
+      # - TARGET_GATEWAY=localhost
+      # - TARGET_GATEWAY_PORT=8088
